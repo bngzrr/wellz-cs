@@ -27,8 +27,6 @@
   .kpi .label { font-size:11px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:var(--muted); margin-bottom:6px; }
   .kpi .value { font-size:26px; font-weight:800; color:var(--plum-dark); line-height:1.1; }
   .kpi .note { font-size:11.5px; color:var(--muted); margin-top:5px; }
-  .kpi .delta-up { color:var(--green); font-weight:700; }
-  .kpi .delta-down { color:var(--red); font-weight:700; }
   .charts { grid-template-columns:repeat(auto-fit,minmax(320px,1fr)); }
   .chart-card h3 { font-size:13.5px; font-weight:700; margin-bottom:2px; }
   .chart-card .hint { font-size:11.5px; color:var(--muted); margin-bottom:10px; }
@@ -42,9 +40,37 @@
   .pill.good { background:#E3F2E5; color:var(--green); }
   .pill.warn { background:#FFF3E0; color:var(--amber); }
   .pill.bad { background:#FDE7E7; color:var(--red); }
-  .section-title { font-size:15px; font-weight:800; color:var(--plum); margin:22px 0 10px; }
   .footnote { font-size:11.5px; color:var(--muted); margin-top:18px; line-height:1.5; }
   .dash { color:#C9BCC4; }
+  /* Client updates tab */
+  .upd-toolbar { display:flex; flex-wrap:wrap; gap:10px; align-items:center; margin-bottom:14px; }
+  .btn { border:none; background:var(--plum); color:#fff; font-weight:700; font-size:13px; padding:9px 16px; border-radius:10px; cursor:pointer; }
+  .btn.secondary { background:var(--pink); color:var(--plum-dark); }
+  .btn.ghost { background:transparent; color:var(--muted); border:1px solid var(--border); }
+  .btn:hover { filter:brightness(1.06); }
+  .upd-form { display:none; margin-bottom:16px; }
+  .upd-form.open { display:block; }
+  .upd-form .row { display:flex; flex-wrap:wrap; gap:10px; margin-bottom:10px; }
+  .upd-form label { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.05em; color:var(--muted); display:block; margin-bottom:4px; }
+  .upd-form input, .upd-form select, .upd-form textarea { width:100%; border:1px solid var(--border); border-radius:9px; padding:8px 10px; font-size:13.5px; font-family:inherit; background:#fff; color:var(--ink); }
+  .upd-form textarea { min-height:64px; resize:vertical; }
+  .upd-form .col { flex:1; min-width:160px; }
+  .cards-grid { grid-template-columns:repeat(auto-fill,minmax(340px,1fr)); align-items:start; }
+  .ccard h4 { font-size:15.5px; font-weight:800; color:var(--plum-dark); }
+  .ccard .head { display:flex; flex-wrap:wrap; gap:8px; align-items:center; margin-bottom:8px; }
+  .ccard .date { font-size:11.5px; color:var(--muted); margin-left:auto; white-space:nowrap; }
+  .ccard .sec { margin-top:9px; }
+  .ccard .sec .sec-label { font-size:10.5px; font-weight:800; letter-spacing:.07em; text-transform:uppercase; color:var(--plum); margin-bottom:3px; }
+  .ccard .sec .sec-body { font-size:13px; line-height:1.55; white-space:pre-wrap; }
+  .ccard ul.todos { list-style:none; margin-top:2px; }
+  .ccard ul.todos li { font-size:13px; line-height:1.55; display:flex; gap:7px; align-items:flex-start; cursor:pointer; padding:2px 0; }
+  .ccard ul.todos li .box { flex:none; width:15px; height:15px; margin-top:3px; border:1.5px solid var(--pink-mid); border-radius:4px; display:inline-flex; align-items:center; justify-content:center; font-size:11px; color:#fff; }
+  .ccard ul.todos li.done .box { background:var(--plum); border-color:var(--plum); }
+  .ccard ul.todos li.done span.txt { text-decoration:line-through; color:var(--muted); }
+  .ccard .entry-tools { margin-top:10px; display:flex; gap:8px; }
+  .ccard .entry-tools button { font-size:11.5px; padding:4px 10px; border-radius:7px; cursor:pointer; border:1px solid var(--border); background:#fff; color:var(--muted); }
+  .ccard .entry-tools button:hover { color:var(--plum); border-color:var(--plum); }
+  .empty-state { text-align:center; color:var(--muted); font-size:13.5px; padding:30px 10px; }
 </style>
 </head>
 <body>
@@ -56,16 +82,104 @@
 <div class="tabs" id="tabs"></div>
 <div id="view"></div>
 
+<script id="cardsData" type="application/json">
+[
+  {
+    "name": "Gruppo Hera", "status": "green", "statusLabel": "On track", "lastUpdate": "2026-06-11",
+    "recap": "Follow-up after the 10/06 in-person + online meeting: Simone shared the 'Wellhub - Hera 10.06.2026' deck with the client team (Continisio, Delena, Ciman). Azzurra replied adding the program data discussed and offered an in-person webinar with a promoter on site to help employees download the app.",
+    "decided": "In-person webinar + promoter proposed to the client; communication proposal in preparation.",
+    "todos": [
+      {"t": "Await Hera feedback on webinar + promoter", "done": false},
+      {"t": "Finalize the communication proposal", "done": false}
+    ]
+  },
+  {
+    "name": "KNDS Ammo Italy", "status": "green", "statusLabel": "On track", "lastUpdate": "2026-06-11",
+    "recap": "Results call with the client (Quartullo, Coggi, Fiorentino, Grieco + RSPP Simmel; online due to strike): presented 20.28% sign-up (vs 0.93% in March, with zero comms), 45% active members, 23 sessions by 10 members, clinical improvements on GAD-7/PHQ-9/WHO-5. Well above benchmark, but the client wants more growth. Employees fear HR monitoring → comms must stress GDPR / data anonymity.",
+    "decided": "Thematic webinars with psychotherapist Stefano (relationships, skills, career, burnout) + manager training, early July. One single soft-tone email to the full employee list during Wellbeing Week (24–30/6) — template approved by the client first.",
+    "todos": [
+      {"t": "Azzurra → send data deck with Stefano in cc", "done": false},
+      {"t": "Draft comms with privacy/anonymity messaging", "done": false},
+      {"t": "Coordinate email send with Gabi Lima", "done": false}
+    ]
+  },
+  {
+    "name": "ERA", "status": "amber", "statusLabel": "Watch", "lastUpdate": "2026-06-11",
+    "recap": "3,206 registrations (+2%) — slow growth since the late-March launch: the client never announced it in a structured way. Plan: personalized banners with QR codes inside existing client comms; legal ~OK to email all Wellhub subscribers (≈500-user conversion gap); October wellness week around 10/10 Mental Health Day with in-person event with Stefano; offline posters/flyers for the older operational population.",
+    "decided": "Comms push in June, summer pause, restart in September. 'Divide et impera' approach (start from specific teams/regions).",
+    "todos": [
+      {"t": "Vitor → email template by 15/6", "done": false},
+      {"t": "Share Natasha's surname with Vitor (list export + send)", "done": false},
+      {"t": "Event logistics with Marilù — meeting 17/6", "done": false}
+    ]
+  },
+  {
+    "name": "Inditex", "status": "amber", "statusLabel": "Watch", "lastUpdate": "2026-06-11",
+    "recap": "Strategic European account — must become the EU success case (Marcella). No feedback since the 30 May meeting. Email to the 1,400 members approved by Silvia and Leandro; user test and mock webinar completed with 5 people. Lunch in Milan on Monday 15/6 with Balla (possibly Simone) and Salvatore.",
+    "decided": "Launch the Ambassador programme (2–3 employees already available).",
+    "todos": [
+      {"t": "Await outcome of the 15/6 lunch", "done": false},
+      {"t": "Ask Balla: free Diamond plan for ambassadors?", "done": false},
+      {"t": "Send email to the 1,400 members", "done": false}
+    ]
+  },
+  {
+    "name": "Alchemy (Dialogo Interiore)", "status": "amber", "statusLabel": "Watch", "lastUpdate": "2026-06-11",
+    "recap": "Contract approved with no-penalty exit clause (Silvia OK), but Virginia remains hesitant: internal leadership restructuring and she is evaluating competitor Serenis (brand awareness, big-city presence); she felt neglected by Fit Prime CS in the past. Context: transition from Fit Prime Therapy to Well Flex (Brazil launch Jun–Jul).",
+    "decided": "Offer monthly in-person CS meetings with anonymized data from other clients (ERA, KNDS) to build credibility; Alisia confirmed for parenting webinars.",
+    "todos": [
+      {"t": "Investigate Serenis with Alisia (growth drivers, in-person meetings?)", "done": false},
+      {"t": "Write to Virginia: monthly CS meetings + parents plan", "done": false},
+      {"t": "Schedule report-presentation call with Virginia", "done": false},
+      {"t": "Create coordination chat group", "done": false}
+    ]
+  },
+  {
+    "name": "Alkemy", "status": "green", "statusLabel": "Approved — launching soon", "lastUpdate": "2026-06-09",
+    "recap": "Commercial proposal approved by Salvatore Falanga: Wellz €6,000 × 12 months (no-penalty stop clause, monthly payments) + Wellhub €5,000 × 12 months. Rome visit postponed due to the 11–12/6 train strike.",
+    "decided": "Contract to be sent shortly; onboarding to be prepared.",
+    "todos": [
+      {"t": "Send the contract", "done": false},
+      {"t": "Reschedule the Rome visit", "done": false}
+    ]
+  },
+  {
+    "name": "ITX Italia", "status": "green", "statusLabel": "On track", "lastUpdate": "2026-06-12",
+    "recap": "From the latest BI export: program launched April 2026, already 140 users, NPS +85 (highest in the Italy portfolio), month-1 retention 86.96% vs 73.02% Wellz average. No client conversations logged this week.",
+    "decided": "",
+    "todos": [
+      {"t": "Plan first review call with the client", "done": false}
+    ]
+  },
+  {
+    "name": "AmSpec", "status": "amber", "statusLabel": "Watch", "lastUpdate": "2026-06-12",
+    "recap": "From the latest BI export: very low volume (169 eligibles, 2 sessions total) — 100% retention and NPS +100 but on a tiny base, interpret with caution. No recent conversations logged.",
+    "decided": "",
+    "todos": [
+      {"t": "Plan an adoption push with the client", "done": false}
+    ]
+  },
+  {
+    "name": "Italy portfolio", "status": "amber", "statusLabel": "Data flag", "lastUpdate": "2026-06-11",
+    "recap": "Completed first sessions declining: 43 in May vs 73 in April and 50 in March (CRM stable). Hypothesis: existing users exhausting their 12-session credits + weak acquisition funnel. Allow lists expected to help top of funnel.",
+    "decided": "",
+    "todos": [
+      {"t": "Investigate the first-sessions drop", "done": false}
+    ]
+  }
+]
+</script>
+
 <script>
 /* ============================================================
    DATA — to add/update a company, edit this object only.
    Source: Metabase "Report BI - ITALY" PDFs + CS decks.
+   Client recap cards live in the JSON script tag above
+   (plus in-page edits, stored in localStorage).
    ============================================================ */
 const DATA = {
   asOf: "12 June 2026",
-  benchmark: { // Wellz average retention curve (months 0-3)
-    retention: [100, 79.66, 54.38, 39.25]
-  },
+  benchmark: { retention: [100, 79.66, 54.38, 39.25] },
   companies: [
     {
       name: "Gruppo Hera",
@@ -116,29 +230,56 @@ const DATA = {
 /* ============================ END DATA ============================ */
 
 const PLUM = "#8E0F5E", PINK = "#E9BFD9", GOLD = "#E0A800", GREEN = "#5B8C2A", GREY = "#BBA9B4";
+const LS_CARDS = "wellzCardOverrides", LS_CARDS_DEL = "wellzCardsDeleted";
 Chart.defaults.font.family = getComputedStyle(document.body).fontFamily;
 Chart.defaults.color = "#7A6B75";
 let charts = [];
+let currentTab = "Overview";
 function destroyCharts(){ charts.forEach(c=>c.destroy()); charts=[]; }
 function fmtNum(v){ return v==null ? '<span class="dash">—</span>' : v.toLocaleString("en-US"); }
 function fmtPct(v){ return v==null ? '<span class="dash">—</span>' : v.toLocaleString("en-US",{maximumFractionDigits:2}) + "%"; }
 function npsPill(v){ if(v==null) return '<span class="dash">—</span>'; const cls = v>=50?"good":(v>=0?"warn":"bad"); return `<span class="pill ${cls}">${v>0?"+":""}${v}</span>`; }
+function esc(s){ return String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+
+/* ----- client cards storage ----- */
+function getEmbeddedCards(){ try { return JSON.parse(document.getElementById("cardsData").textContent || "[]"); } catch(e){ return []; } }
+function getLS(key, fallback){ try { return JSON.parse(localStorage.getItem(key)) ?? fallback; } catch(e){ return fallback; } }
+function getCards(){
+  const embedded = getEmbeddedCards();
+  const overrides = getLS(LS_CARDS, {});
+  const deleted = getLS(LS_CARDS_DEL, []);
+  const names = new Set(embedded.map(c=>c.name));
+  const merged = embedded.map(c => overrides[c.name] ? overrides[c.name] : c);
+  Object.values(overrides).forEach(c => { if(!names.has(c.name)) merged.push(c); });
+  return merged.filter(c=>!deleted.includes(c.name)).sort((a,b)=> (b.lastUpdate||"").localeCompare(a.lastUpdate||""));
+}
+function saveCard(card){ const o = getLS(LS_CARDS, {}); o[card.name] = card; localStorage.setItem(LS_CARDS, JSON.stringify(o)); }
+function deleteCard(name){
+  const o = getLS(LS_CARDS, {}); delete o[name]; localStorage.setItem(LS_CARDS, JSON.stringify(o));
+  if(getEmbeddedCards().some(c=>c.name===name)){ const del = getLS(LS_CARDS_DEL, []); del.push(name); localStorage.setItem(LS_CARDS_DEL, JSON.stringify(del)); }
+}
 
 document.getElementById("updatedLine").textContent = "Data as of " + DATA.asOf + " · Reference period: last 12 completed months · Benchmarks = Wellz average";
 
-const tabsEl = document.getElementById("tabs");
-const tabNames = ["Overview", ...DATA.companies.map(c=>c.name)];
-tabNames.forEach((n,i)=>{
-  const b = document.createElement("button");
-  b.className = "tab" + (i===0?" active":"");
-  b.textContent = n;
-  b.onclick = ()=>{ document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active")); b.classList.add("active"); render(n); };
-  tabsEl.appendChild(b);
-});
+const TAB_UPDATES = "Client Updates";
+function buildTabs(){
+  const tabsEl = document.getElementById("tabs");
+  tabsEl.innerHTML = "";
+  const tabNames = ["Overview", TAB_UPDATES, ...DATA.companies.map(c=>c.name)];
+  tabNames.forEach(n=>{
+    const b = document.createElement("button");
+    b.className = "tab" + (n===currentTab?" active":"");
+    b.textContent = n;
+    b.onclick = ()=>{ currentTab = n; document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active")); b.classList.add("active"); render(n); };
+    tabsEl.appendChild(b);
+  });
+}
 
 function render(name){
   destroyCharts();
-  if(name==="Overview") renderOverview(); else renderCompany(DATA.companies.find(c=>c.name===name));
+  if(name==="Overview") renderOverview();
+  else if(name===TAB_UPDATES) renderUpdates();
+  else renderCompany(DATA.companies.find(c=>c.name===name));
 }
 
 function renderOverview(){
@@ -190,6 +331,136 @@ function renderOverview(){
       {label:"Company retention % (latest month)",data:DATA.companies.map(c=>c.retention.company[c.retention.company.length-1]),backgroundColor:PLUM,borderRadius:6},
       {label:"Wellz average % (same month)",data:DATA.companies.map(c=>c.retention.wellz[c.retention.wellz.length-1]),backgroundColor:GREY,borderRadius:6}]},
     options:{responsive:true,maintainAspectRatio:false,scales:{y:{beginAtZero:true,max:100,ticks:{callback:v=>v+"%"}}}}}));
+}
+
+/* ----- Client Updates tab (one recap card per client) ----- */
+const STATUS_META = { green:["good","🟢"], amber:["warn","🟡"], red:["bad","🔴"] };
+function renderUpdates(){
+  const v = document.getElementById("view");
+  const cards = getCards();
+  v.innerHTML = `
+    <div class="upd-toolbar">
+      <button class="btn" id="btnNew">+ New client card</button>
+      <button class="btn secondary" id="btnExport">⬇ Download shareable HTML</button>
+      <span style="font-size:12px;color:var(--muted)">Active clients & approved deals only. Edits are saved on this computer — use Download to get the updated file for the team.</span>
+    </div>
+    <div class="card upd-form" id="updForm">
+      <input type="hidden" id="fOrig" value="">
+      <div class="row">
+        <div class="col"><label>Client</label><input type="text" id="fName" placeholder="Client name"></div>
+        <div class="col" style="max-width:170px"><label>Status</label><select id="fStatus"><option value="green">🟢 On track</option><option value="amber">🟡 Watch</option><option value="red">🔴 At risk</option></select></div>
+        <div class="col" style="max-width:200px"><label>Status label</label><input type="text" id="fStatusLabel" placeholder="e.g. Approved — launching soon"></div>
+        <div class="col" style="max-width:170px"><label>Last update</label><input type="date" id="fDate" value="${new Date().toISOString().slice(0,10)}"></div>
+      </div>
+      <div class="row"><div class="col"><label>Latest recap</label><textarea id="fRecap" placeholder="What happened in the latest conversation / period"></textarea></div></div>
+      <div class="row"><div class="col"><label>Agreed / decided (optional)</label><textarea id="fDecided"></textarea></div></div>
+      <div class="row"><div class="col"><label>CS to-do — one per line, prefix [x] if done</label><textarea id="fTodos" placeholder="Send data deck&#10;[x] Already done item"></textarea></div></div>
+      <button class="btn" id="btnSave">Save card</button>
+      <button class="btn ghost" id="btnCancel">Cancel</button>
+    </div>
+    <div class="grid cards-grid" id="cardList"></div>`;
+
+  const list = document.getElementById("cardList");
+  if(!cards.length){
+    list.innerHTML = '<div class="card empty-state">No client cards yet. Click "+ New client card".</div>';
+  } else {
+    list.innerHTML = cards.map(c=>{
+      const [cls, dot] = STATUS_META[c.status] || STATUS_META.green;
+      return `
+      <div class="card ccard" data-name="${esc(c.name)}">
+        <div class="head"><h4>${esc(c.name)}</h4><span class="pill ${cls}">${dot} ${esc(c.statusLabel || "")}</span><span class="date">Last update: ${esc(c.lastUpdate || "")}</span></div>
+        <div class="sec"><div class="sec-label">Latest recap</div><div class="sec-body">${esc(c.recap)}</div></div>
+        ${c.decided ? `<div class="sec"><div class="sec-label">Agreed / decided</div><div class="sec-body">${esc(c.decided)}</div></div>` : ""}
+        ${(c.todos && c.todos.length) ? `<div class="sec"><div class="sec-label">CS to-do</div>
+          <ul class="todos">${c.todos.map((t,i)=>`<li class="${t.done?"done":""}" data-i="${i}"><span class="box">${t.done?"✓":""}</span><span class="txt">${esc(t.t)}</span></li>`).join("")}</ul></div>` : ""}
+        <div class="entry-tools">
+          <button data-act="edit">Edit</button>
+          <button data-act="copy">Copy as message</button>
+          <button data-act="del">Delete</button>
+        </div>
+      </div>`;
+    }).join("");
+  }
+
+  const form = document.getElementById("updForm");
+  function openForm(card){
+    form.classList.add("open");
+    document.getElementById("fOrig").value = card ? card.name : "";
+    document.getElementById("fName").value = card ? card.name : "";
+    document.getElementById("fStatus").value = card ? card.status : "green";
+    document.getElementById("fStatusLabel").value = card ? (card.statusLabel||"") : "";
+    document.getElementById("fDate").value = card ? card.lastUpdate : new Date().toISOString().slice(0,10);
+    document.getElementById("fRecap").value = card ? card.recap : "";
+    document.getElementById("fDecided").value = card ? (card.decided||"") : "";
+    document.getElementById("fTodos").value = card ? (card.todos||[]).map(t=>(t.done?"[x] ":"")+t.t).join("\n") : "";
+    form.scrollIntoView({behavior:"smooth"});
+  }
+  document.getElementById("btnNew").onclick = ()=> openForm(null);
+  document.getElementById("btnCancel").onclick = ()=> form.classList.remove("open");
+  document.getElementById("btnSave").onclick = ()=>{
+    const name = document.getElementById("fName").value.trim();
+    if(!name){ alert("Client name is required."); return; }
+    const orig = document.getElementById("fOrig").value;
+    if(orig && orig!==name) deleteCard(orig);
+    const todos = document.getElementById("fTodos").value.split("\n").map(s=>s.trim()).filter(Boolean)
+      .map(s=> s.toLowerCase().startsWith("[x]") ? {t:s.slice(3).trim(), done:true} : {t:s.replace(/^\[\s?\]\s*/,""), done:false});
+    saveCard({
+      name,
+      status: document.getElementById("fStatus").value,
+      statusLabel: document.getElementById("fStatusLabel").value.trim() || ({green:"On track",amber:"Watch",red:"At risk"})[document.getElementById("fStatus").value],
+      lastUpdate: document.getElementById("fDate").value || new Date().toISOString().slice(0,10),
+      recap: document.getElementById("fRecap").value.trim(),
+      decided: document.getElementById("fDecided").value.trim(),
+      todos
+    });
+    renderUpdates();
+  };
+
+  list.querySelectorAll(".ccard").forEach(cardEl=>{
+    const name = cardEl.dataset.name;
+    cardEl.querySelectorAll("ul.todos li").forEach(li=>{
+      li.onclick = ()=>{
+        const card = JSON.parse(JSON.stringify(getCards().find(c=>c.name===name)));
+        const i = parseInt(li.dataset.i,10);
+        card.todos[i].done = !card.todos[i].done;
+        saveCard(card);
+        renderUpdates();
+      };
+    });
+    cardEl.querySelectorAll(".entry-tools button").forEach(b=>{
+      b.onclick = ()=>{
+        const card = getCards().find(c=>c.name===name);
+        if(b.dataset.act==="edit") openForm(card);
+        else if(b.dataset.act==="del"){ if(confirm("Delete the card for "+name+"?")){ deleteCard(name); renderUpdates(); } }
+        else {
+          const txt = `*${card.name}* — ${card.statusLabel} (last update ${card.lastUpdate})\n\n${card.recap}`
+            + (card.decided ? `\n\nAgreed:\n${card.decided}` : "")
+            + ((card.todos&&card.todos.length) ? `\n\nCS to-do:\n${card.todos.map(t=>(t.done?"✅ ":"▢ ")+t.t).join("\n")}` : "");
+          navigator.clipboard.writeText(txt).then(()=>{ b.textContent="Copied!"; setTimeout(()=>b.textContent="Copy as message",1500); });
+        }
+      };
+    });
+  });
+  document.getElementById("btnExport").onclick = exportHtml;
+}
+
+function exportHtml(){
+  // Bake current cards (embedded + local edits) into the embedded JSON, serialize a clean copy, restore UI.
+  const merged = getCards();
+  const node = document.getElementById("cardsData");
+  const prev = node.textContent;
+  node.textContent = "\n" + JSON.stringify(merged, null, 1).replace(/</g, "\\u003c") + "\n";
+  const tabsEl = document.getElementById("tabs"), viewEl = document.getElementById("view");
+  tabsEl.innerHTML = ""; viewEl.innerHTML = "";
+  const html = "<!DOCTYPE html>\n" + document.documentElement.outerHTML;
+  node.textContent = prev;
+  const blob = new Blob([html], {type:"text/html"});
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = "wellz-italy-cs-dashboard.html";
+  a.click();
+  URL.revokeObjectURL(a.href);
+  buildTabs(); render(currentTab);
 }
 
 function renderCompany(c){
@@ -244,7 +515,8 @@ function renderCompany(c){
     options:{indexAxis:"y",responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{beginAtZero:true,ticks:{precision:0}}}}}));
 }
 
-render("Overview");
+buildTabs();
+render(currentTab);
 </script>
 </body>
 </html>
