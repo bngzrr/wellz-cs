@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wellz Italy — CS KPI Dashboard</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.0/dist/chart.umd.js" integrity="sha384-iU8HYtnGQ8Cy4zl7gbNMOhsDTTKX02BTXptVP/vqAWIaTfM7isw76iyZCsjL2eVi" crossorigin="anonymous"></script>
+<style>
+  :root { color-scheme: light;
+    --plum:#8E0F5E; --plum-dark:#6E0B49; --pink:#F6E3EF; --pink-mid:#E9BFD9;
+    --bg:#FAF7F9; --card:#FFFFFF; --ink:#2B2230; --muted:#7A6B75;
+    --green:#2E7D32; --amber:#C77800; --red:#C62828; --border:#EADDE5;
+  }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif; background:var(--bg); color:var(--ink); padding:20px 24px 40px; }
+  header { display:flex; flex-wrap:wrap; align-items:baseline; gap:10px; margin-bottom:6px; }
+  header h1 { font-size:22px; font-weight:800; color:var(--plum); }
+  header .sub { font-size:13px; color:var(--muted); }
+  .updated { font-size:12px; color:var(--muted); margin-bottom:16px; }
+  .tabs { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:20px; }
+  .tab { border:1px solid var(--border); background:var(--card); color:var(--ink); padding:8px 16px; border-radius:999px; font-size:13.5px; font-weight:600; cursor:pointer; transition:all .15s; }
+  .tab:hover { border-color:var(--plum); color:var(--plum); }
+  .tab.active { background:var(--plum); border-color:var(--plum); color:#fff; }
+  .grid { display:grid; gap:14px; }
+  .kpis { grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); margin-bottom:18px; }
+  .card { background:var(--card); border:1px solid var(--border); border-radius:14px; padding:14px 16px; }
+  .kpi .label { font-size:11px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:var(--muted); margin-bottom:6px; }
+  .kpi .value { font-size:26px; font-weight:800; color:var(--plum-dark); line-height:1.1; }
+  .kpi .note { font-size:11.5px; color:var(--muted); margin-top:5px; }
+  .kpi .delta-up { color:var(--green); font-weight:700; }
+  .kpi .delta-down { color:var(--red); font-weight:700; }
+  .charts { grid-template-columns:repeat(auto-fit,minmax(320px,1fr)); }
+  .chart-card h3 { font-size:13.5px; font-weight:700; margin-bottom:2px; }
+  .chart-card .hint { font-size:11.5px; color:var(--muted); margin-bottom:10px; }
+  .chart-wrap { position:relative; height:230px; }
+  table { width:100%; border-collapse:collapse; font-size:13px; }
+  th, td { text-align:right; padding:9px 10px; border-bottom:1px solid var(--border); white-space:nowrap; }
+  th:first-child, td:first-child { text-align:left; font-weight:700; }
+  thead th { font-size:11px; text-transform:uppercase; letter-spacing:.05em; color:var(--muted); }
+  tbody tr:hover { background:var(--pink); }
+  .pill { display:inline-block; padding:2px 8px; border-radius:999px; font-size:11.5px; font-weight:700; }
+  .pill.good { background:#E3F2E5; color:var(--green); }
+  .pill.warn { background:#FFF3E0; color:var(--amber); }
+  .pill.bad { background:#FDE7E7; color:var(--red); }
+  .section-title { font-size:15px; font-weight:800; color:var(--plum); margin:22px 0 10px; }
+  .footnote { font-size:11.5px; color:var(--muted); margin-top:18px; line-height:1.5; }
+  .dash { color:#C9BCC4; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Wellz Italy — CS KPI Dashboard</h1>
+  <span class="sub">Customer Success · Internal · prepared for Luana</span>
+</header>
+<div class="updated" id="updatedLine"></div>
+<div class="tabs" id="tabs"></div>
+<div id="view"></div>
+
+<script>
+/* ============================================================
+   DATA — to add/update a company, edit this object only.
+   Source: Metabase "Report BI - ITALY" PDFs + CS decks.
+   ============================================================ */
+const DATA = {
+  asOf: "12 June 2026",
+  benchmark: { // Wellz average retention curve (months 0-3)
+    retention: [100, 79.66, 54.38, 39.25]
+  },
+  companies: [
+    {
+      name: "Gruppo Hera",
+      source: "Wellz CS deck (Metabase Report BI), launch → 25/05/2026",
+      kpis: { eligibles: 10322, totalUsers: 172, signUpRate: 1.67, engagedUsers: 124, engagementRate: 72.09, realEngagementRate: null, csat: 4.44, nps30: 12, npsAll: 13 },
+      signUpEvolution: { labels: ["Mar 2026","Apr 2026"], values: [1.01, 1.67] },
+      engagement: { labels: ["Mar 2026","Apr 2026"], accumulated: [64.42, 72.09], monthly: [null, null] },
+      sessions: { labels: [], completed: [], sessioners: [], totalDelivered: 130 },
+      retention: { labels: ["M0","M1","M2"], company: [100, 100, 81.4], wellz: [100, 79.32, 55.04] },
+      clinicalNeeds: [["Interpersonal relationships",113],["Professional skills development",44],["Career guidance",44],["Emotional burnout",42],["Fears & phobias",41],["Weight management",22],["Eating disorders",20]],
+      highlights: ["3-month retention 81.4% — 26.4 pts above Wellz benchmark (55.04%)","Sign-up rate +66% MoM (1.01% → 1.67%)","130 sessions delivered since launch","Severe sleep issues halved: 29.0% → 12.9%"]
+    },
+    {
+      name: "KNDS Ammo Italy",
+      source: "Metabase — Report BI ITALY, 12/06/2026",
+      kpis: { eligibles: 217, totalUsers: 44, signUpRate: 20.28, engagedUsers: 20, engagementRate: 45.45, realEngagementRate: 25, csat: 5, nps30: 33, npsAll: 57 },
+      signUpEvolution: { labels: ["Mar 2026","Apr 2026","May 2026"], values: [0.93, 18.22, 20.28] },
+      engagement: { labels: ["Mar 2026","Apr 2026","May 2026"], accumulated: [50, 43.59, 45.45], monthly: [50, 43.59, 25] },
+      sessions: { labels: ["Apr 2026","May 2026"], completed: [10, 13], sessioners: [4, 6], totalDelivered: 23 },
+      retention: { labels: ["M0","M1","M2"], company: [100, 100, 51.56], wellz: [100, 76.93, 51.56] },
+      clinicalNeeds: [["Interpersonal relationships",13],["Professional skills development",8],["Career guidance",8],["Emotional burnout",7],["Fears & phobias",7],["Weight management",2],["Eating disorders",2],["Diversity",1]],
+      highlights: ["Sign-up rate jumped 0.93% → 20.28% in 3 months — best adoption in portfolio","CSAT perfect 5/5; NPS all-period +57","23 accumulated sessions, 2.17 sessions per sessioner in May","Monthly engagement declining (50% → 25%) — watch"]
+    },
+    {
+      name: "ITX Italia",
+      source: "Metabase — Report BI ITALY (latest export)",
+      kpis: { eligibles: 9414, totalUsers: 140, signUpRate: 1.49, engagedUsers: 73, engagementRate: 52.14, realEngagementRate: 52.14, csat: 5, nps30: 85, npsAll: 85 },
+      signUpEvolution: { labels: ["Apr 2026","May 2026"], values: [0.01, 1.49] },
+      engagement: { labels: ["Apr 2026","May 2026"], accumulated: [null, null], monthly: [0, 50] },
+      sessions: { labels: ["May 2026"], completed: [10], sessioners: [9], totalDelivered: 10 },
+      retention: { labels: ["M0","M1"], company: [100, 86.96], wellz: [100, 73.02] },
+      clinicalNeeds: [["Interpersonal relationships",59],["Emotional burnout",36],["Career guidance",28],["Professional skills development",28],["Fears & phobias",19],["Weight management",12],["Eating disorders",5]],
+      highlights: ["NPS +85 — highest in the Italy portfolio","Month-1 retention 86.96% vs 73.02% Wellz average","Program just launched (Apr 2026): 140 users in ~2 months","141 first assessments completed — second-assessment data not yet available"]
+    },
+    {
+      name: "AmSpec",
+      source: "Metabase — Report BI ITALY, 12/06/2026",
+      kpis: { eligibles: 169, totalUsers: null, signUpRate: 3.55, engagedUsers: null, engagementRate: 83.33, realEngagementRate: 33.33, csat: 4.5, nps30: 100, npsAll: 50 },
+      signUpEvolution: { labels: ["Mar 2026","Apr 2026"], values: [2.96, 3.55] },
+      engagement: { labels: ["Mar 2026","Apr 2026","May 2026"], accumulated: [60, 83.33, 83.33], monthly: [60, 33.33, 33.33] },
+      sessions: { labels: ["Mar 2026","Apr 2026","May 2026"], completed: [1, 0, 1], sessioners: [1, 0, 1], totalDelivered: 2 },
+      retention: { labels: ["M0","M1","M2"], company: [100, 100, 100], wellz: [100, 79.66, 54.38] },
+      clinicalNeeds: [["Career guidance",4],["Professional skills development",4],["Interpersonal relationships",3],["Weight management",1],["Emotional burnout",1]],
+      highlights: ["100% retention through month 2 — small but loyal user base","NPS last 30 days: +100","Very low volume (169 eligibles, 2 sessions) — interpret rates with caution","5 first assessments, no second assessments yet"]
+    }
+  ]
+};
+/* ============================ END DATA ============================ */
+
+const PLUM = "#8E0F5E", PINK = "#E9BFD9", GOLD = "#E0A800", GREEN = "#5B8C2A", GREY = "#BBA9B4";
+Chart.defaults.font.family = getComputedStyle(document.body).fontFamily;
+Chart.defaults.color = "#7A6B75";
+let charts = [];
+function destroyCharts(){ charts.forEach(c=>c.destroy()); charts=[]; }
+function fmtNum(v){ return v==null ? '<span class="dash">—</span>' : v.toLocaleString("en-US"); }
+function fmtPct(v){ return v==null ? '<span class="dash">—</span>' : v.toLocaleString("en-US",{maximumFractionDigits:2}) + "%"; }
+function npsPill(v){ if(v==null) return '<span class="dash">—</span>'; const cls = v>=50?"good":(v>=0?"warn":"bad"); return `<span class="pill ${cls}">${v>0?"+":""}${v}</span>`; }
+
+document.getElementById("updatedLine").textContent = "Data as of " + DATA.asOf + " · Reference period: last 12 completed months · Benchmarks = Wellz average";
+
+const tabsEl = document.getElementById("tabs");
+const tabNames = ["Overview", ...DATA.companies.map(c=>c.name)];
+tabNames.forEach((n,i)=>{
+  const b = document.createElement("button");
+  b.className = "tab" + (i===0?" active":"");
+  b.textContent = n;
+  b.onclick = ()=>{ document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active")); b.classList.add("active"); render(n); };
+  tabsEl.appendChild(b);
+});
+
+function render(name){
+  destroyCharts();
+  if(name==="Overview") renderOverview(); else renderCompany(DATA.companies.find(c=>c.name===name));
+}
+
+function renderOverview(){
+  const v = document.getElementById("view");
+  const totEligibles = DATA.companies.reduce((s,c)=>s+(c.kpis.eligibles||0),0);
+  const totUsers = DATA.companies.reduce((s,c)=>s+(c.kpis.totalUsers||0),0);
+  const totEngaged = DATA.companies.reduce((s,c)=>s+(c.kpis.engagedUsers||0),0);
+  const totSessions = DATA.companies.reduce((s,c)=>s+(c.sessions.totalDelivered||0),0);
+  v.innerHTML = `
+    <div class="grid kpis">
+      <div class="card kpi"><div class="label">Companies</div><div class="value">${DATA.companies.length}</div><div class="note">active Italy accounts tracked</div></div>
+      <div class="card kpi"><div class="label">Total Eligibles</div><div class="value">${fmtNum(totEligibles)}</div><div class="note">across all companies</div></div>
+      <div class="card kpi"><div class="label">Total Users</div><div class="value">${fmtNum(totUsers)}</div><div class="note">excl. companies without data</div></div>
+      <div class="card kpi"><div class="label">Engaged Users</div><div class="value">${fmtNum(totEngaged)}</div><div class="note">excl. companies without data</div></div>
+      <div class="card kpi"><div class="label">Sessions Delivered</div><div class="value">${fmtNum(totSessions)}</div><div class="note">accumulated</div></div>
+    </div>
+    <div class="card" style="overflow-x:auto; margin-bottom:14px;">
+      <table>
+        <thead><tr><th>Company</th><th>Eligibles</th><th>Users</th><th>Sign-up</th><th>Engaged</th><th>Engagement</th><th>CSAT</th><th>NPS 30d</th><th>NPS all</th></tr></thead>
+        <tbody>
+          ${DATA.companies.map(c=>`<tr>
+            <td>${c.name}</td><td>${fmtNum(c.kpis.eligibles)}</td><td>${fmtNum(c.kpis.totalUsers)}</td>
+            <td>${fmtPct(c.kpis.signUpRate)}</td><td>${fmtNum(c.kpis.engagedUsers)}</td><td>${fmtPct(c.kpis.engagementRate)}</td>
+            <td>${c.kpis.csat==null?'<span class="dash">—</span>':c.kpis.csat+" / 5"}</td><td>${npsPill(c.kpis.nps30)}</td><td>${npsPill(c.kpis.npsAll)}</td>
+          </tr>`).join("")}
+        </tbody>
+      </table>
+    </div>
+    <div class="grid charts">
+      <div class="card chart-card"><h3>Sign-up vs Engagement Rate</h3><div class="hint">Latest values by company</div><div class="chart-wrap"><canvas id="ovRates"></canvas></div></div>
+      <div class="card chart-card"><h3>NPS by Company</h3><div class="hint">Last 30 days vs all period</div><div class="chart-wrap"><canvas id="ovNps"></canvas></div></div>
+      <div class="card chart-card"><h3>Retention vs Wellz Average</h3><div class="hint">Latest available month per company</div><div class="chart-wrap"><canvas id="ovRet"></canvas></div></div>
+    </div>
+    <div class="footnote">Select a company tab for monthly trends, retention curve, sessions and clinical needs. AmSpec user counts were not available in the latest export.</div>`;
+
+  const names = DATA.companies.map(c=>c.name);
+  charts.push(new Chart(document.getElementById("ovRates"),{type:"bar",
+    data:{labels:names,datasets:[
+      {label:"Sign-up rate %",data:DATA.companies.map(c=>c.kpis.signUpRate),backgroundColor:PINK,borderRadius:6},
+      {label:"Engagement rate %",data:DATA.companies.map(c=>c.kpis.engagementRate),backgroundColor:PLUM,borderRadius:6}]},
+    options:{responsive:true,maintainAspectRatio:false,scales:{y:{beginAtZero:true,ticks:{callback:v=>v+"%"}}}}}));
+  charts.push(new Chart(document.getElementById("ovNps"),{type:"bar",
+    data:{labels:names,datasets:[
+      {label:"NPS last 30d",data:DATA.companies.map(c=>c.kpis.nps30),backgroundColor:GOLD,borderRadius:6},
+      {label:"NPS all period",data:DATA.companies.map(c=>c.kpis.npsAll),backgroundColor:PLUM,borderRadius:6}]},
+    options:{responsive:true,maintainAspectRatio:false,scales:{y:{suggestedMin:-100,suggestedMax:100}}}}));
+  charts.push(new Chart(document.getElementById("ovRet"),{type:"bar",
+    data:{labels:names,datasets:[
+      {label:"Company retention % (latest month)",data:DATA.companies.map(c=>c.retention.company[c.retention.company.length-1]),backgroundColor:PLUM,borderRadius:6},
+      {label:"Wellz average % (same month)",data:DATA.companies.map(c=>c.retention.wellz[c.retention.wellz.length-1]),backgroundColor:GREY,borderRadius:6}]},
+    options:{responsive:true,maintainAspectRatio:false,scales:{y:{beginAtZero:true,max:100,ticks:{callback:v=>v+"%"}}}}}));
+}
+
+function renderCompany(c){
+  const v = document.getElementById("view");
+  const k = c.kpis;
+  v.innerHTML = `
+    <div class="updated" style="margin-top:-6px">Source: ${c.source}</div>
+    <div class="grid kpis">
+      <div class="card kpi"><div class="label">Current Eligibles</div><div class="value">${fmtNum(k.eligibles)}</div></div>
+      <div class="card kpi"><div class="label">Total Users</div><div class="value">${fmtNum(k.totalUsers)}</div></div>
+      <div class="card kpi"><div class="label">Sign-up Rate</div><div class="value">${fmtPct(k.signUpRate)}</div></div>
+      <div class="card kpi"><div class="label">Engaged Users</div><div class="value">${fmtNum(k.engagedUsers)}</div></div>
+      <div class="card kpi"><div class="label">Engagement Rate</div><div class="value">${fmtPct(k.engagementRate)}</div></div>
+      <div class="card kpi"><div class="label">Real Engagement</div><div class="value">${fmtPct(k.realEngagementRate)}</div></div>
+      <div class="card kpi"><div class="label">CSAT</div><div class="value">${k.csat==null?'<span class="dash">—</span>':k.csat+'<span style="font-size:14px;color:var(--muted)"> / 5</span>'}</div></div>
+      <div class="card kpi"><div class="label">NPS · 30 days</div><div class="value">${npsPill(k.nps30)}</div></div>
+      <div class="card kpi"><div class="label">NPS · All period</div><div class="value">${npsPill(k.npsAll)}</div></div>
+    </div>
+    <div class="grid charts">
+      <div class="card chart-card"><h3>Sign-up Rate Evolution</h3><div class="hint">% of eligibles signed up</div><div class="chart-wrap"><canvas id="cSign"></canvas></div></div>
+      <div class="card chart-card"><h3>Engagement Rate — Monthly vs Accumulated</h3><div class="hint">% of users engaged</div><div class="chart-wrap"><canvas id="cEng"></canvas></div></div>
+      <div class="card chart-card"><h3>Sessions &amp; Sessioners</h3><div class="hint">Completed sessions per month · total delivered: ${fmtNum(c.sessions.totalDelivered)}</div><div class="chart-wrap"><canvas id="cSess"></canvas></div></div>
+      <div class="card chart-card"><h3>Retention vs Wellz Average</h3><div class="hint">Cohort retention by month since sign-up</div><div class="chart-wrap"><canvas id="cRet"></canvas></div></div>
+      <div class="card chart-card"><h3>Top Clinical Needs (Onboarding)</h3><div class="hint">Reasons members joined</div><div class="chart-wrap"><canvas id="cNeeds"></canvas></div></div>
+      <div class="card chart-card"><h3>Highlights</h3><div class="hint">What to tell the client</div>
+        <ul style="font-size:13px;line-height:1.7;padding-left:18px;margin-top:6px;">${c.highlights.map(h=>`<li>${h}</li>`).join("")}</ul>
+      </div>
+    </div>`;
+
+  const lineOpts = {responsive:true,maintainAspectRatio:false,scales:{y:{beginAtZero:true,ticks:{callback:v=>v+"%"}}}};
+  if(c.signUpEvolution.labels.length){
+    charts.push(new Chart(document.getElementById("cSign"),{type:"line",
+      data:{labels:c.signUpEvolution.labels,datasets:[{label:"Sign-up rate %",data:c.signUpEvolution.values,borderColor:PLUM,backgroundColor:PLUM,tension:.3,pointRadius:4}]},options:lineOpts}));
+  }
+  charts.push(new Chart(document.getElementById("cEng"),{type:"line",
+    data:{labels:c.engagement.labels,datasets:[
+      {label:"Accumulated %",data:c.engagement.accumulated,borderColor:GREEN,backgroundColor:GREEN,tension:.3,pointRadius:4},
+      {label:"Monthly %",data:c.engagement.monthly,borderColor:GOLD,backgroundColor:GOLD,tension:.3,pointRadius:4}]},
+    options:{...lineOpts,scales:{y:{beginAtZero:true,max:100,ticks:{callback:v=>v+"%"}}}}}));
+  charts.push(new Chart(document.getElementById("cSess"),{type:"bar",
+    data:{labels:c.sessions.labels,datasets:[
+      {label:"Completed sessions",data:c.sessions.completed,backgroundColor:PLUM,borderRadius:6},
+      {label:"Distinct sessioners",data:c.sessions.sessioners,backgroundColor:PINK,borderRadius:6}]},
+    options:{responsive:true,maintainAspectRatio:false,scales:{y:{beginAtZero:true,ticks:{precision:0}}}}}));
+  charts.push(new Chart(document.getElementById("cRet"),{type:"line",
+    data:{labels:c.retention.labels,datasets:[
+      {label:c.name+" %",data:c.retention.company,borderColor:PLUM,backgroundColor:PLUM,tension:.2,pointRadius:4},
+      {label:"Wellz average %",data:c.retention.wellz,borderColor:GREY,backgroundColor:GREY,borderDash:[6,4],tension:.2,pointRadius:4}]},
+    options:{responsive:true,maintainAspectRatio:false,scales:{y:{beginAtZero:true,max:100,ticks:{callback:v=>v+"%"}}}}}));
+  charts.push(new Chart(document.getElementById("cNeeds"),{type:"bar",
+    data:{labels:c.clinicalNeeds.map(n=>n[0]),datasets:[{label:"Mentions",data:c.clinicalNeeds.map(n=>n[1]),backgroundColor:PLUM,borderRadius:6}]},
+    options:{indexAxis:"y",responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{beginAtZero:true,ticks:{precision:0}}}}}));
+}
+
+render("Overview");
+</script>
+</body>
+</html>
