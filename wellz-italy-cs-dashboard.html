@@ -1,6 +1,13 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
+<html lang="en"><head><script type="application/json" id="cowork-artifact-meta">
+{
+  "name": "Wellz Italy Cs Dashboard",
+  "schemaVersion": 1,
+  "description": "Interactive CS KPI dashboard for Luana — Wellz Italy portfolio (Gruppo Hera, KNDS Ammo Italy, ITX Italia, AmSpec). Overview comparison + per-company tabs with Big Numbers, CSAT/NPS, sign-up & engagement trends, sessions, retention vs Wellz benchmark, clinical needs. Data manually extracted from Metabase BI PDF exports; updated by Claude when new files/data are provided."
+}
+</script>
+
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Wellz Italy — CS KPI Dashboard</title>
@@ -78,95 +85,154 @@
   <h1>Wellz Italy — CS KPI Dashboard</h1>
   <span class="sub">Customer Success · Internal · prepared for Luana</span>
 </header>
-<div class="updated" id="updatedLine"></div>
+<div class="updated" id="updatedLine">Data as of 12 June 2026 · Reference period: last 12 completed months · Benchmarks = Wellz average</div>
 <div class="tabs" id="tabs"></div>
 <div id="view"></div>
 
 <script id="cardsData" type="application/json">
 [
-  {
-    "name": "Gruppo Hera", "status": "green", "statusLabel": "On track", "lastUpdate": "2026-06-11",
-    "recap": "Follow-up after the 10/06 in-person + online meeting: Simone shared the 'Wellhub - Hera 10.06.2026' deck with the client team (Continisio, Delena, Ciman). Azzurra replied adding the program data discussed and offered an in-person webinar with a promoter on site to help employees download the app.",
-    "decided": "In-person webinar + promoter proposed to the client; communication proposal in preparation.",
-    "todos": [
-      {"t": "Await Hera feedback on webinar + promoter", "done": false},
-      {"t": "Finalize the communication proposal", "done": false}
-    ]
-  },
-  {
-    "name": "KNDS Ammo Italy", "status": "green", "statusLabel": "On track", "lastUpdate": "2026-06-11",
-    "recap": "Results call with the client (Quartullo, Coggi, Fiorentino, Grieco + RSPP Simmel; online due to strike): presented 20.28% sign-up (vs 0.93% in March, with zero comms), 45% active members, 23 sessions by 10 members, clinical improvements on GAD-7/PHQ-9/WHO-5. Well above benchmark, but the client wants more growth. Employees fear HR monitoring → comms must stress GDPR / data anonymity.",
-    "decided": "Thematic webinars with psychotherapist Stefano (relationships, skills, career, burnout) + manager training, early July. One single soft-tone email to the full employee list during Wellbeing Week (24–30/6) — template approved by the client first.",
-    "todos": [
-      {"t": "Azzurra → send data deck with Stefano in cc", "done": false},
-      {"t": "Draft comms with privacy/anonymity messaging", "done": false},
-      {"t": "Coordinate email send with Gabi Lima", "done": false}
-    ]
-  },
-  {
-    "name": "ERA", "status": "amber", "statusLabel": "Watch", "lastUpdate": "2026-06-11",
-    "recap": "3,206 registrations (+2%) — slow growth since the late-March launch: the client never announced it in a structured way. Plan: personalized banners with QR codes inside existing client comms; legal ~OK to email all Wellhub subscribers (≈500-user conversion gap); October wellness week around 10/10 Mental Health Day with in-person event with Stefano; offline posters/flyers for the older operational population.",
-    "decided": "Comms push in June, summer pause, restart in September. 'Divide et impera' approach (start from specific teams/regions).",
-    "todos": [
-      {"t": "Vitor → email template by 15/6", "done": false},
-      {"t": "Share Natasha's surname with Vitor (list export + send)", "done": false},
-      {"t": "Event logistics with Marilù — meeting 17/6", "done": false}
-    ]
-  },
-  {
-    "name": "Inditex", "status": "amber", "statusLabel": "Watch", "lastUpdate": "2026-06-11",
-    "recap": "Strategic European account — must become the EU success case (Marcella). No feedback since the 30 May meeting. Email to the 1,400 members approved by Silvia and Leandro; user test and mock webinar completed with 5 people. Lunch in Milan on Monday 15/6 with Balla (possibly Simone) and Salvatore.",
-    "decided": "Launch the Ambassador programme (2–3 employees already available).",
-    "todos": [
-      {"t": "Await outcome of the 15/6 lunch", "done": false},
-      {"t": "Ask Balla: free Diamond plan for ambassadors?", "done": false},
-      {"t": "Send email to the 1,400 members", "done": false}
-    ]
-  },
-  {
-    "name": "Alchemy (Dialogo Interiore)", "status": "amber", "statusLabel": "Watch", "lastUpdate": "2026-06-11",
-    "recap": "Contract approved with no-penalty exit clause (Silvia OK), but Virginia remains hesitant: internal leadership restructuring and she is evaluating competitor Serenis (brand awareness, big-city presence); she felt neglected by Fit Prime CS in the past. Context: transition from Fit Prime Therapy to Well Flex (Brazil launch Jun–Jul).",
-    "decided": "Offer monthly in-person CS meetings with anonymized data from other clients (ERA, KNDS) to build credibility; Alisia confirmed for parenting webinars.",
-    "todos": [
-      {"t": "Investigate Serenis with Alisia (growth drivers, in-person meetings?)", "done": false},
-      {"t": "Write to Virginia: monthly CS meetings + parents plan", "done": false},
-      {"t": "Schedule report-presentation call with Virginia", "done": false},
-      {"t": "Create coordination chat group", "done": false}
-    ]
-  },
-  {
-    "name": "Alkemy", "status": "green", "statusLabel": "Approved — launching soon", "lastUpdate": "2026-06-09",
-    "recap": "Commercial proposal approved by Salvatore Falanga: Wellz €6,000 × 12 months (no-penalty stop clause, monthly payments) + Wellhub €5,000 × 12 months. Rome visit postponed due to the 11–12/6 train strike.",
-    "decided": "Contract to be sent shortly; onboarding to be prepared.",
-    "todos": [
-      {"t": "Send the contract", "done": false},
-      {"t": "Reschedule the Rome visit", "done": false}
-    ]
-  },
-  {
-    "name": "ITX Italia", "status": "green", "statusLabel": "On track", "lastUpdate": "2026-06-12",
-    "recap": "From the latest BI export: program launched April 2026, already 140 users, NPS +85 (highest in the Italy portfolio), month-1 retention 86.96% vs 73.02% Wellz average. No client conversations logged this week.",
-    "decided": "",
-    "todos": [
-      {"t": "Plan first review call with the client", "done": false}
-    ]
-  },
-  {
-    "name": "AmSpec", "status": "amber", "statusLabel": "Watch", "lastUpdate": "2026-06-12",
-    "recap": "From the latest BI export: very low volume (169 eligibles, 2 sessions total) — 100% retention and NPS +100 but on a tiny base, interpret with caution. No recent conversations logged.",
-    "decided": "",
-    "todos": [
-      {"t": "Plan an adoption push with the client", "done": false}
-    ]
-  },
-  {
-    "name": "Italy portfolio", "status": "amber", "statusLabel": "Data flag", "lastUpdate": "2026-06-11",
-    "recap": "Completed first sessions declining: 43 in May vs 73 in April and 50 in March (CRM stable). Hypothesis: existing users exhausting their 12-session credits + weak acquisition funnel. Allow lists expected to help top of funnel.",
-    "decided": "",
-    "todos": [
-      {"t": "Investigate the first-sessions drop", "done": false}
-    ]
-  }
+ {
+  "name": "ITX Italia",
+  "status": "green",
+  "statusLabel": "On track",
+  "lastUpdate": "2026-06-12",
+  "recap": "From the latest BI export: program launched April 2026, already 140 users, NPS +85 (highest in the Italy portfolio), month-1 retention 86.96% vs 73.02% Wellz average. No client conversations logged this week.",
+  "decided": "",
+  "todos": [
+   {
+    "t": "Plan first review call with the client",
+    "done": false
+   }
+  ]
+ },
+ {
+  "name": "AmSpec",
+  "status": "amber",
+  "statusLabel": "Watch",
+  "lastUpdate": "2026-06-12",
+  "recap": "From the latest BI export: very low volume (169 eligibles, 2 sessions total) — 100% retention and NPS +100 but on a tiny base, interpret with caution. No recent conversations logged.",
+  "decided": "",
+  "todos": [
+   {
+    "t": "Plan an adoption push with the client",
+    "done": false
+   }
+  ]
+ },
+ {
+  "name": "Gruppo Hera",
+  "status": "green",
+  "statusLabel": "On track",
+  "lastUpdate": "2026-06-11",
+  "recap": "Follow-up after the 10/06 in-person + online meeting: Simone shared the 'Wellhub - Hera 10.06.2026' deck with the client team (Continisio, Delena, Ciman). Azzurra replied adding the program data discussed and offered an in-person webinar with a promoter on site to help employees download the app. Growth still slow since the late-March launch — the client never announced the program in a structured way. Plan: personalized banners with QR codes inside existing client comms; legal ~OK to email all Wellhub subscribers (≈500-user conversion gap); October wellness week around 10/10 Mental Health Day with in-person event with Stefano; offline posters/flyers for the older operational population.",
+  "decided": "In-person webinar + promoter proposed; comms push in June, summer pause, restart in September; 'divide et impera' approach (start from specific teams/regions).",
+  "todos": [
+   {
+    "t": "Await Hera feedback on webinar + promoter",
+    "done": false
+   },
+   {
+    "t": "Finalize the communication proposal",
+    "done": false
+   },
+   {
+    "t": "Vitor → email template by 15/6",
+    "done": false
+   },
+   {
+    "t": "Share Natasha's surname with Vitor (list export + send)",
+    "done": false
+   },
+   {
+    "t": "Event logistics with Marilù — meeting 17/6",
+    "done": false
+   }
+  ]
+ },
+ {
+  "name": "KNDS Ammo Italy",
+  "status": "green",
+  "statusLabel": "On track",
+  "lastUpdate": "2026-06-11",
+  "recap": "Results call with the client (Quartullo, Coggi, Fiorentino, Grieco + RSPP Simmel; online due to strike): presented 20.28% sign-up (vs 0.93% in March, with zero comms), 45% active members, 23 sessions by 10 members, clinical improvements on GAD-7/PHQ-9/WHO-5. Well above benchmark, but the client wants more growth. Employees fear HR monitoring → comms must stress GDPR / data anonymity.",
+  "decided": "Thematic webinars with psychotherapist Stefano (relationships, skills, career, burnout) + manager training, early July. One single soft-tone email to the full employee list during Wellbeing Week (24–30/6) — template approved by the client first.",
+  "todos": [
+   {
+    "t": "Azzurra → send data deck with Stefano in cc",
+    "done": false
+   },
+   {
+    "t": "Draft comms with privacy/anonymity messaging",
+    "done": false
+   },
+   {
+    "t": "Coordinate email send with Gabi Lima",
+    "done": false
+   }
+  ]
+ },
+ {
+  "name": "Inditex",
+  "status": "amber",
+  "statusLabel": "Watch",
+  "lastUpdate": "2026-06-11",
+  "recap": "Strategic European account — must become the EU success case (Marcella). No feedback since the 30 May meeting. Email to the 1,400 members approved by Silvia and Leandro; user test and mock webinar completed with 5 people. Lunch in Milan on Monday 15/6 with Balla (possibly Simone) and Salvatore.",
+  "decided": "Launch the Ambassador programme (2–3 employees already available).",
+  "todos": [
+   {
+    "t": "Await outcome of the 15/6 lunch",
+    "done": false
+   },
+   {
+    "t": "Ask Balla: free Diamond plan for ambassadors?",
+    "done": false
+   },
+   {
+    "t": "Send email to the 1,400 members",
+    "done": false
+   }
+  ]
+ },
+ {
+  "name": "Alchemy (Dialogo Interiore)",
+  "status": "amber",
+  "statusLabel": "Watch",
+  "lastUpdate": "2026-06-11",
+  "recap": "Contract approved with no-penalty exit clause (Silvia OK), but Virginia remains hesitant: internal leadership restructuring and she is evaluating competitor Serenis (brand awareness, big-city presence); she felt neglected by Fit Prime CS in the past. Context: transition from Fit Prime Therapy to Well Flex (Brazil launch Jun–Jul).",
+  "decided": "Offer monthly in-person CS meetings with anonymized data from other clients (ERA, KNDS) to build credibility; Alisia confirmed for parenting webinars.",
+  "todos": [
+   {
+    "t": "Investigate Serenis with Alisia (growth drivers, in-person meetings?)",
+    "done": false
+   },
+   {
+    "t": "Write to Virginia: monthly CS meetings + parents plan",
+    "done": false
+   },
+   {
+    "t": "Schedule report-presentation call with Virginia",
+    "done": false
+   },
+   {
+    "t": "Create coordination chat group",
+    "done": false
+   }
+  ]
+ },
+ {
+  "name": "Italy portfolio",
+  "status": "amber",
+  "statusLabel": "Data flag",
+  "lastUpdate": "2026-06-11",
+  "recap": "Completed first sessions declining: 43 in May vs 73 in April and 50 in March (CRM stable). Hypothesis: existing users exhausting their 12-session credits + weak acquisition funnel. Allow lists expected to help top of funnel.",
+  "decided": "",
+  "todos": [
+   {
+    "t": "Investigate the first-sessions drop",
+    "done": false
+   }
+  ]
+ }
 ]
 </script>
 
@@ -342,7 +408,7 @@ function renderUpdates(){
     <div class="upd-toolbar">
       <button class="btn" id="btnNew">+ New client card</button>
       <button class="btn secondary" id="btnExport">⬇ Download shareable HTML</button>
-      <span style="font-size:12px;color:var(--muted)">Active clients & approved deals only. Edits are saved on this computer — use Download to get the updated file for the team.</span>
+      <span style="font-size:12px;color:var(--muted)">Active clients only. Edits are saved on this computer — use Download to get the updated file for the team.</span>
     </div>
     <div class="card upd-form" id="updForm">
       <input type="hidden" id="fOrig" value="">
@@ -518,5 +584,6 @@ function renderCompany(c){
 buildTabs();
 render(currentTab);
 </script>
-</body>
-</html>
+
+
+</body></html>
